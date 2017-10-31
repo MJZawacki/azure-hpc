@@ -1,0 +1,26 @@
+{
+    "masterVMsku": { "value": "Standard_DS3_v2"},
+    "masterImage":{ "value": "CentOS_7.2"},
+    "sharedStorage": {"value": "beegfs"},
+    "dataDiskSize": {"value": "P10"},
+    "scheduler": {"value": "pbspro"},
+    "vmPrefix": {"value": "hpc"},
+    "adminUserName": {"value": ""},
+    "adminPassword": {"value": ""},
+    "sshKeyData": {"value": ""},
+    "numberofusers":{ "value": "3"},
+
+
+    "storageVMsku": { "value": "Standard_DS3_v2"},
+    "nodeCount": { "value": 3 },
+    "storageDiskSize": { "value": "P10" },
+    "nbStorageDisks": { "value": 2 },
+    "nbMetaDisks": { "value": 2 },
+    "RGvnetName": { "value": "hpc" },
+
+    "computeVMsku": {"value": "Standard_DS3_v2"},
+    "computeNodeImage": {"value": "CentOS_7.2"},
+    "vmSSPrefix": {"value": "comp"},
+    "instanceCountPerVMSS": {"value": 2},
+    "numberOfVMSS": {"value": 1}
+}

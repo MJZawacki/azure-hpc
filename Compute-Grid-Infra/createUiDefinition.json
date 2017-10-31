@@ -1,0 +1,549 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [
+      {
+        "name": "adminUserName",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Admin User",
+        "defaultValue": "admin",
+        "toolTip": "Provide a value that is used for the prefix of your storage account. Limit to 11 characters.",
+        "constraints": {
+          "required": true,
+          "regex": "^[a-z0-9A-Z]{1,11}$",
+          "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-11 characters long."
+        },
+        "visible": true
+      },
+      {
+        "name": "adminPassword",
+        "type": "Microsoft.Common.PasswordBox",
+        "label": {
+          "password": "Admin Password",
+          "confirmPassword": "Confirm password"
+        },
+        "toolTip": "",
+        "constraints": {
+          "required": true,
+          "regex": "",
+          "validationMessage": ""
+        },
+        "options": {
+          "hideConfirmation": false
+        },
+        "visible": true
+      },
+      {
+        "name": "sshKeyData",
+        "type": "Microsoft.Common.TextBox",
+        "label": "SSH Key",
+        "defaultValue": "",
+        "toolTip": "Provide a value that is used for the prefix of your storage account. Limit to 11 characters.",
+        "constraints": {
+          "required": true,
+          "regex": "",
+          "validationMessage": ""
+        },
+        "visible": true
+      }
+    ],
+    "steps": [
+      {
+        "name": "masterConfig",
+        "label": "Master VM Configuration",
+        "subLabel": {
+          "preValidation": "Configure the master virtual machine settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Master VM Configuration",
+        "elements": [
+          {
+            "name": "masterVmPrefix",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Virtual Machine Name prefix",
+            "toolTip": "Prefix of the Master VM",
+            "defaultValue": "",
+            "constraints": {
+              "required": true,
+              "regex": "[a-z][a-z0-9-]{2,5}[a-z0-9]$",
+              "validationMessage": "Must be 3-5 characters."
+            }
+          },
+          {
+            "name": "masterVMsku",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Virtual machine size",
+            "toolTip": "The size of the virtual machine for web app",
+            "recommendedSizes": [
+              "Standard_DS1_v2"
+            ],
+            "constraints": {
+              "allowedSizes": [
+                "Standard_DS1_v2",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2",
+                "Standard_DS11_v2",
+                "Standard_DS12_v2",
+                "Standard_DS13_v2",
+                "Standard_DS14_v2",
+                "Standard_DS15_v2"
+              ]
+            },
+            "osPlatform": "Linux",
+            "count": 1
+          },
+          {
+            "name": "numberofusers",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Number of users to provision",
+            "defaultValue": "1",
+            "toolTip": "Specify the number of users to provision on the master",
+            "constraints": {
+              "required": true,
+              "regex": "^[0-9]{1,11}$",
+              "validationMessage": "Only numbers are allowed"
+            },
+            "visible": true
+          },
+          {
+            "name": "masterImage",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "VM Image of the master nodes",
+            "defaultValue": "CentOS_7.2",
+            "toolTip": "Select the image that will be used for the master VM",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "CentOS_6.7",
+                  "value": "CentOS_6.7"
+                },
+                {
+                  "label": "CentOS_7.2",
+                  "value": "CentOS_7.2"
+                },
+                {
+                  "label": "RHEL_7.2",
+                  "value": "RHEL_7.2"
+                },
+                {
+                  "label": "W2012R2",
+                  "value": "W2012R2"
+                }
+              ]
+            },
+            "visible": true
+          },
+          {
+            "name": "sharedStorage",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Shared Storage Type",
+            "defaultValue": "none",
+            "toolTip": "specify the shared storage to be used. beegfs=> beegfs cluster, nfsonmaster=> nfs share on the master",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "none",
+                  "value": "none"
+                },
+                {
+                  "label": "beegfs",
+                  "value": "beegfs"
+                },
+                {
+                  "label": "nfsonmaster",
+                  "value": "nfsonmaster"
+                }
+              ]
+            },
+            "visible": true
+          },
+          {
+            "name": "dataDiskSize",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Premium Storage Disk",
+            "defaultValue": "none",
+            "toolTip": "Premium storage disk size to attach",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "none",
+                  "value": "none"
+                },
+                {
+                  "label": "P10",
+                  "value": "P10"
+                },
+                {
+                  "label": "P20",
+                  "value": "P20"
+                },
+                {
+                  "label": "P30",
+                  "value": "P30"
+                }
+              ]
+            },
+            "visible": true
+          },
+          {
+            "name": "scheduler",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Task Scheduler",
+            "defaultValue": "none",
+            "toolTip": "Select a scheduler to manage tasks",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "none",
+                  "value": "none"
+                },
+                {
+                  "label": "pbspro",
+                  "value": "pbspro"
+                }
+              ]
+            },
+            "visible": true
+          }
+        ]
+      },
+      {
+        "name": "beegfsconfig",
+        "label": "BeeGFS Configuration",
+        "subLabel": {
+          "preValidation": "Configure the storage cluster",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "BeeGFS Configuration",
+        "elements": [
+          {
+            "name": "nodeType",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Node Type",
+            "defaultValue": "both",
+            "toolTip": "Select storage node types",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "both",
+                  "value": "both"
+                },
+                {
+                  "label": "meta",
+                  "value": "meta"
+                },
+                {
+                  "label": "storage",
+                  "value": "storage"
+                }
+              ]
+            },
+            "visible": true
+          },
+          {
+            "name": "storageVMsku",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Virtual machine size",
+            "toolTip": "The size of the virtual machine for web app",
+            "recommendedSizes": [
+              "Standard_DS1_v2"
+            ],
+            "constraints": {
+              "allowedSizes": [
+                "Standard_DS1_v2",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2",
+                "Standard_DS11_v2",
+                "Standard_DS12_v2",
+                "Standard_DS13_v2",
+                "Standard_DS14_v2",
+                "Standard_DS15_v2"
+              ]
+            },
+            "osPlatform": "Linux",
+            "count": 1
+          },
+          {
+            "name": "nodeCount",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Number of storage nodes",
+            "defaultValue": "1",
+            "toolTip": "Specify the number of storagenodes to provision",
+            "constraints": {
+              "required": true,
+              "regex": "^[0-9]{1,11}$",
+              "validationMessage": "Only numbers are allowed"
+            },
+            "visible": true
+          },
+          {
+            "name": "RGvnetName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "RG Vnet Name",
+            "defaultValue": "",
+            "toolTip": "Name of the RG of the virtual network to use.",
+            "constraints": {
+              "required": true,
+              "regex": "",
+              "validationMessage": ""
+            },
+            "visible": true
+          },
+          {
+            "name": "storageDiskSize",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Premium Disk for Storage",
+            "defaultValue": "P10",
+            "toolTip": "Premium storage disk size to attach",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "P10",
+                  "value": "P10"
+                },
+                {
+                  "label": "P20",
+                  "value": "P20"
+                },
+                {
+                  "label": "P30",
+                  "value": "P30"
+                }
+              ]
+            },
+            "visible": true
+          },
+          {
+            "name": "nbStorageDisks",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Number of storage disks",
+            "defaultValue": "2",
+            "toolTip": "Specify the number of storage disks to provision",
+            "constraints": {
+              "required": true,
+              "regex": "^[0-9]{1,3}$",
+              "validationMessage": "Only numbers are allowed"
+            },
+            "visible": true
+          },
+          {
+            "name": "metaDiskSize",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Premium Disk for Meta Storage",
+            "defaultValue": "P10",
+            "toolTip": "Premium storage disk size to attach",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "P10",
+                  "value": "P10"
+                },
+                {
+                  "label": "P20",
+                  "value": "P20"
+                },
+                {
+                  "label": "P30",
+                  "value": "P30"
+                }
+              ]
+            },
+            "visible": true
+          },
+          {
+            "name": "nbMetaDisks",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Number of meta disks",
+            "defaultValue": "2",
+            "toolTip": "Specify the number of meta disks to provision",
+            "constraints": {
+              "required": true,
+              "regex": "^[0-9]{1,3}$",
+              "validationMessage": "Only numbers are allowed"
+            },
+            "visible": true
+          },
+          {
+            "name": "customDomain",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Custom Domain Name",
+            "defaultValue": "",
+            "toolTip": "custom domain name to use for name resolution",
+            "constraints": {
+              "required": false,
+              "regex": "",
+              "validationMessage": ""
+            },
+            "visible": true
+          }
+        ]
+      },
+      {
+        "name": "computenodesconfig",
+        "label": "Compute Cluster Configuration",
+        "subLabel": {
+          "preValidation": "Configure the compute cluster",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Compute Cluster Configuration",
+        "elements": [
+          {
+          "name": "computeVMsku",
+          "type": "Microsoft.Compute.SizeSelector",
+          "label": "Virtual machine size",
+          "toolTip": "The size of the virtual machine for web app",
+          "recommendedSizes": [
+            "Standard_DS3_v2"
+          ],
+          "constraints": {
+            "allowedSizes": [
+              "Standard_A8",
+              "Standard_A9",
+              "Standard_D2_v2",
+              "Standard_D3_v2",
+              "Standard_D4_v2",
+              "Standard_D5_v2",
+              "Standard_D11_v2",
+              "Standard_D12_v2",
+              "Standard_D13_v2",
+              "Standard_D14_v2",
+              "Standard_D15_v2",
+              "Standard_DS2_v2",
+              "Standard_DS3_v2",
+              "Standard_DS4_v2",
+              "Standard_DS5_v2",
+              "Standard_DS11_v2",
+              "Standard_DS12_v2",
+              "Standard_DS13_v2",
+              "Standard_DS14_v2",
+              "Standard_DS15_v2",
+              "Standard_F4",
+              "Standard_F8",
+              "Standard_F16",
+              "Standard_F4s",
+              "Standard_F8s",
+              "Standard_F16s",
+              "Standard_H8",
+              "Standard_H16",
+              "Standard_H8m",
+              "Standard_H16m",
+              "Standard_H16r",
+              "Standard_H16mr",
+              "Standard_NC6",
+              "Standard_NC12",
+              "Standard_NC24",
+              "Standard_NC24r"
+            ]
+          },
+          "osPlatform": "Linux",
+          "count": 1
+        }, 
+        {
+          "name": "computeNodeVmPrefix",
+          "type": "Microsoft.Common.TextBox",
+          "label": "Compute Node VM Name prefix",
+          "toolTip": "Prefix of the Compute Nodes",
+          "defaultValue": "",
+          "constraints": {
+            "required": true,
+            "regex": "[a-z][a-z0-9-]{2,5}[a-z0-9]$",
+            "validationMessage": "Must be 3-5 characters."
+          }
+        },
+        {
+          "name": "computeNodeImage",
+          "type": "Microsoft.Common.OptionsGroup",
+          "label": "VM Image of the master nodes",
+          "defaultValue": "CentOS_7.2",
+          "toolTip": "Select the image that will be used for the master VM",
+          "constraints": {
+            "allowedValues": [
+              {
+                "label": "CentOS_6.7",
+                "value": "CentOS_6.7"
+              },
+              {
+                "label": "CentOS_7.2",
+                "value": "CentOS_7.2"
+              },
+              {
+                "label": "CentOS-HPC_7.1",
+                "value": "CentOS-HPC_7.1"
+              },
+              {
+                "label": "RHEL_7.2",
+                "value": "RHEL_7.2"
+              },
+              {
+                "label": "W2012R2",
+                "value": "W2012R2"
+              }
+            ]
+          },
+          "visible": true
+        },
+        {
+          "name": "instanceCountPerVMSS",
+          "type": "Microsoft.Common.TextBox",
+          "label": "Number VMs per scaleset",
+          "defaultValue": "2",
+          "toolTip": "Number of VM instances per Scaleset (100 or less).",
+          "constraints": {
+            "required": true,
+            "regex": "^[0-9]{1,3}$",
+            "validationMessage": "Only numbers are allowed"
+          },
+          "visible": true
+        },
+        {
+          "name": "numberOfVMSS",
+          "type": "Microsoft.Common.TextBox",
+          "label": "Number scalesets to deploy",
+          "defaultValue": "1",
+          "toolTip": "Number of VMSSes to deploy (max of 100)",
+          "constraints": {
+            "required": true,
+            "regex": "^[0-9]{1,3}$",
+            "validationMessage": "Only numbers are allowed"
+          },
+          "visible": true
+        }
+        ]
+      }
+    ],
+    "outputs": {
+      "adminUserName": "[basics('adminUserName')]",
+      "adminPassword": "[basics('adminPassword')]",
+      "sshKeyData": "[basics('sshKeyData')]",
+      "numberofusers": "[steps('masterConfig').numberofusers]",
+      "vmPrefix": "[steps('masterConfig').masterVmPrefix]",
+      "masterVMsku": "[steps('masterConfig').masterVMsku]",
+      "masterImage": "[steps('masterConfig').masterImage]",
+      "sharedStorage": "[steps('masterConfig').sharedStorage]",
+      "dataDiskSize": "[steps('masterConfig').dataDiskSize]",
+      "scheduler": "[steps('masterConfig').scheduler]",
+
+      "nodeType": "[steps('beegfsconfig').scheduler]",
+      "nodeCount": "[parse(steps('beegfsconfig').nodeCount)]",
+      "RGvnetName": "[steps('beegfsconfig').RGvnetName]",
+      "storageVMsku": "[steps('beegfsconfig').storageVMsku]",
+      "storageDiskSize": "[steps('beegfsconfig').storageDiskSize]",
+      "nbStorageDisks": "[parse(steps('beegfsconfig').nbStorageDisks)]",
+      "metaDiskSize": "[steps('beegfsconfig').metaDiskSize]",
+      "nbMetaDisks": "[parse(steps('beegfsconfig').nbMetaDisks)]",
+      "customDomain": "[steps('beegfsconfig').customDomain]",
+
+      "computeVMsku": "[steps('computenodesconfig').computeVMsku]",
+      "computeNodeImage": "[steps('computenodesconfig').computeNodeImage]",
+      "vmSSPrefix": "[steps('computenodesconfig').computeNodeVmPrefix]",
+      "instanceCountPerVMSS": "[parse(steps('computenodesconfig').instanceCountPerVMSS)]",
+      "numberOfVMSS": "[parse(steps('computenodesconfig').numberOfVMSS)]"
+    }
+  }
+}

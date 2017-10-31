@@ -37,19 +37,12 @@
       "metadata": {
         "description": "password for the Virtual Machine."
       }
-    },
-    "postInstallCommand": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "post install command to run as a post script install"
-      }
     }
   },
   "variables": {
     "location": "[resourceGroup().location]",
     "namingInfix": "[toLower(take(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 9))]",
-    "vnetID": "[resourceId(parameters('nodeSettings').vnetRG, 'Microsoft.Network/virtualNetworks', parameters('nodeSettings').vnetName)]",
+    "vnetID": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('nodeSettings').vnetName)]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('nodeSettings').subnetName)]",
     "nicName": "[concat(variables('namingInfix'), 'nic')]",
     "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
@@ -65,29 +58,27 @@
       "beegfs": {
         "params": " -S beegfs"
       },
-      "ganglia": {
-        "params": " -n ganglia"
-      },
       "pbspro": {
-        "params": "[concat(' -s pbspro -q ', parameters('vmssName'))]"
+        "params": " -s pbspro"
       },
       "master": {
         "params": "[concat(' -m ', parameters('nodeSettings').MasterName)]"
       },
-      "postinstall": {
-        "params": "[concat(' -c ', parameters('postInstallCommand'))]"
+      "numberofusers": {
+        "params": "[concat(' -n ', parameters('nodeSettings').numberofusers)]"
       }
     },
     "cnSetupScript": "cn-setup.sh",
     "vmScripts": {
       "scriptsToDownload": [
         "[uri(deployment().properties.templateLink.uri, variables('cnSetupScript'))]",
-        "[uri(deployment().properties.templateLink.uri, 'BeeGFS/install_beegfs.sh')]",
-        "[uri(deployment().properties.templateLink.uri, 'PBSPro/install_pbspro.sh')]",
-        "[uri(deployment().properties.templateLink.uri, 'PBSPro/pbs_selfregister.sh')]",
-        "[uri(deployment().properties.templateLink.uri, 'Ganglia/install_ganglia.sh')]"
+        "[uri(deployment().properties.templateLink.uri, 'BeeGFS/installbeegfs.sh')]",
+        "[uri(deployment().properties.templateLink.uri, 'PBSPro/installpbspro.sh')]",
+        "[uri(deployment().properties.templateLink.uri, 'PBSPro/pbsselfregister.sh')]",
+        "[uri(deployment().properties.templateLink.uri, 'Ganglia/installganglia.sh')]", 
+        "[uri(deployment().properties.templateLink.uri, 'custom/softwareinstall.sh')]"
       ],
-      "commandToExecute": "[concat('bash ', variables('cnSetupScript'), variables('ScriptsOptions')['master'].params, variables('ScriptsOptions')[parameters('nodeSettings').scheduler].params, variables('ScriptsOptions')[parameters('nodeSettings').sharedStorage].params, variables('ScriptsOptions')[parameters('nodeSettings').monitoring].params, variables('ScriptsOptions')['postinstall'].params)]"
+      "commandToExecute": "[concat('bash ', variables('cnSetupScript'), variables('ScriptsOptions')['master'].params, variables('ScriptsOptions')[parameters('nodeSettings').scheduler].params, variables('ScriptsOptions')[parameters('nodeSettings').sharedStorage].params, variables('ScriptsOptions')['numberofusers'].params)]"
     },
     "sshKeyPath": "[concat('/home/',parameters('nodeOSSettings').adminUserName,'/.ssh/authorized_keys')]"
   },
@@ -103,7 +94,7 @@
         "capacity": "[parameters('instanceCount')]"
       },
       "properties": {
-        "overprovision": "true",
+        "overprovision": "false",
         "upgradePolicy": {
           "mode": "Manual"
         },

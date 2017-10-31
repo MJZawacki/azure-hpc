@@ -60,7 +60,7 @@
     "saCount": "[add(2, div(parameters('instanceCount'), 30))]",
     "vhdContainerName": "[concat(variables('namingInfix'), 'vhd')]",
     "osDiskName": "[concat(variables('namingInfix'), 'osdisk')]",
-    "vnetID": "[resourceId(parameters('nodeSettings').vnetRG, 'Microsoft.Network/virtualNetworks', parameters('nodeSettings').vnetName)]",
+    "vnetID": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('nodeSettings').vnetName)]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('nodeSettings').subnetName)]",
     "nicName": "[concat(variables('namingInfix'), 'nic')]",
     "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
@@ -85,10 +85,10 @@
     "vmScripts": {
       "scriptsToDownload": [
         "[uri(deployment().properties.templateLink.uri, variables('cnSetupScript'))]",
-        "[uri(deployment().properties.templateLink.uri, 'BeeGFS/install_beegfs.sh')]",
-        "[uri(deployment().properties.templateLink.uri, 'PBSPro/install_pbspro.sh')]",
-        "[uri(deployment().properties.templateLink.uri, 'PBSPro/pbs_selfregister.sh')]",
-        "[uri(deployment().properties.templateLink.uri, 'Ganglia/install_ganglia.sh')]"
+        "[uri(deployment().properties.templateLink.uri, 'BeeGFS/installbeegfs.sh')]",
+        "[uri(deployment().properties.templateLink.uri, 'PBSPro/installpbspro.sh')]",
+        "[uri(deployment().properties.templateLink.uri, 'PBSPro/pbsselfregister.sh')]",
+        "[uri(deployment().properties.templateLink.uri, 'Ganglia/installganglia.sh')]"
       ],
       "commandToExecute": "[concat('bash ', variables('cnSetupScript'), variables('ScriptsOptions')['master'].params, variables('ScriptsOptions')[parameters('nodeSettings').scheduler].params, variables('ScriptsOptions')[parameters('nodeSettings').sharedStorage].params)]"
     },

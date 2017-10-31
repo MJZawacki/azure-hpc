@@ -1,0 +1,464 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "masterVMsku": {
+        "type": "string",
+        "allowedValues": [
+          "Standard_DS1_v2",
+          "Standard_DS2_v2",
+          "Standard_DS3_v2",
+          "Standard_DS4_v2",
+          "Standard_DS5_v2",
+          "Standard_DS11_v2",
+          "Standard_DS12_v2",
+          "Standard_DS13_v2",
+          "Standard_DS14_v2",
+          "Standard_DS15_v2"
+        ],
+        "metadata": {
+          "description": "sku to use for the master VM"
+        }
+      },
+      "masterImage": {
+        "type": "string",
+        "defaultValue": "CentOS_7.2",
+        "allowedValues": [
+          "CentOS_6.7",
+          "CentOS_7.2",
+          "RHEL_7.2",
+          "W2012R2"
+        ],
+        "metadata": {
+          "description": "The VM image of the master nodes"
+        }
+      },
+      "sharedStorage": {
+        "type": "string",
+        "defaultValue": "none",
+        "allowedValues": [
+          "none",
+          "beegfs",
+          "nfsonmaster"
+        ],
+        "metadata": {
+          "description": "specify the shared storage to be used. beegfs=> beegfs cluster, nfsonmaster=> nfs share on the master"
+        }
+      },
+      "dataDiskSize": {
+        "type": "string",
+        "defaultValue": "none",
+        "allowedValues": [
+          "none",
+          "P10",
+          "P20",
+          "P30"
+        ],
+        "metadata": {
+          "description": "Premium storage disk size to attach"
+        }
+      },
+      "scheduler": {
+        "type": "string",
+        "defaultValue": "none",
+        "allowedValues": [
+          "none",
+          "pbspro"
+        ],
+        "metadata": {
+          "description": "specify the job scheduler to be used"
+        }
+      },
+      "vmPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Base string for naming resources (max length of 8)"
+        },
+        "maxLength": 8
+      },
+      "adminUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Virtual Machine."
+        }
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "defaultValue": "",
+        "metadata": {
+          "description": "password for the Virtual Machine."
+        }
+      },
+      "sshKeyData": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "SSH rsa public key file as a string."
+        }
+      },
+      "numberofusers": {
+        "type": "string",
+        "metadata": {
+          "description": "Number of user ID's to provision."
+        }
+      },
+
+
+
+      "nodeType": {
+        "type": "string",
+        "defaultValue": "both",
+        "allowedValues": [
+          "both",
+          "meta",
+          "storage"
+        ],
+        "metadata": {
+          "description": "type of beegfs node to deploy"
+        }
+      },
+      "storageVMsku": {
+        "type": "string",
+        "allowedValues": [
+          "Standard_DS1_v2",
+          "Standard_DS2_v2",
+          "Standard_DS3_v2",
+          "Standard_DS4_v2",
+          "Standard_DS5_v2",
+          "Standard_DS11_v2",
+          "Standard_DS12_v2",
+          "Standard_DS13_v2",
+          "Standard_DS14_v2",
+          "Standard_DS15_v2"
+        ],
+        "metadata": {
+          "description": "sku to use for the master VM"
+        }
+      },
+      "nodeCount": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of BeeGFS nodes (100 or less)."
+        },
+        "defaultValue": 1,
+        "maxValue": 100
+      },
+      "RGvnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the RG of the virtual network to use."
+        }
+      },
+      "storageDiskSize": {
+        "type": "string",
+        "defaultValue": "P10",
+        "allowedValues": [
+          "P10",
+          "P20",
+          "P30"
+        ],
+        "metadata": {
+          "description": "Premium storage disk size used for the storage services"
+        }
+      },
+      "nbStorageDisks": {
+        "type": "int",
+        "defaultValue": 2,
+        "minValue": 2,
+        "maxValue": 8,
+        "metadata": {
+          "description": "Number of storage disks"
+        }
+      },
+      "metaDiskSize": {
+        "type": "string",
+        "defaultValue": "P10",
+        "allowedValues": [
+          "P10",
+          "P20",
+          "P30"
+        ],
+        "metadata": {
+          "description": "Premium storage disk size used for the metadata services"
+        }
+      },
+      "nbMetaDisks": {
+        "type": "int",
+        "defaultValue": 2,
+        "minValue": 2,
+        "maxValue": 6,
+        "metadata": {
+          "description": "Number of metadate disks"
+        }
+      },
+      "customDomain": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "custom domain name to use for name resolution"
+        }
+      },
+
+
+
+      "computeVMsku": {
+        "type": "string",
+        "defaultValue": "Standard_D3_v2",
+        "allowedValues": [
+          "Standard_A8",
+          "Standard_A9",
+          "Standard_D2_v2",
+          "Standard_D3_v2",
+          "Standard_D4_v2",
+          "Standard_D5_v2",
+          "Standard_D11_v2",
+          "Standard_D12_v2",
+          "Standard_D13_v2",
+          "Standard_D14_v2",
+          "Standard_D15_v2",
+          "Standard_DS2_v2",
+          "Standard_DS3_v2",
+          "Standard_DS4_v2",
+          "Standard_DS5_v2",
+          "Standard_DS11_v2",
+          "Standard_DS12_v2",
+          "Standard_DS13_v2",
+          "Standard_DS14_v2",
+          "Standard_DS15_v2",
+          "Standard_F4",
+          "Standard_F8",
+          "Standard_F16",
+          "Standard_F4s",
+          "Standard_F8s",
+          "Standard_F16s",
+          "Standard_H8",
+          "Standard_H16",
+          "Standard_H8m",
+          "Standard_H16m",
+          "Standard_H16r",
+          "Standard_H16mr",
+          "Standard_NC6",
+          "Standard_NC12",
+          "Standard_NC24",
+          "Standard_NC24r"
+        ],
+        "metadata": {
+          "description": "Instance type to use for the compute nodes"
+        }
+      },
+      "computeNodeImage": {
+        "type": "string",
+        "defaultValue": "CentOS_7.2",
+        "allowedValues": [
+          "CentOS_6.7",
+          "CentOS_7.2",
+          "CentOS-HPC_7.1",
+          "RHEL_7.2",
+          "W2012R2"
+        ],
+        "metadata": {
+          "description": "The VM image of the compute nodes"
+        }
+      },
+      "vmSSPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Base string for naming resources (max length of 8)"
+        },
+        "maxLength": 8
+      },
+      "instanceCountPerVMSS": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of VM instances per Scaleset (100 or less)."
+        },
+        "defaultValue": 2,
+        "maxValue": 100
+      },
+      "numberOfVMSS": {
+        "type": "int",
+        "defaultValue": 1,
+        "maxValue": 100,
+        "metadata": {
+          "description": "Number of VMSSes to deploy (max of 100)"
+        }
+      }
+    },
+    "variables": {
+        "masterdeployUrl": "[uri(deployment().properties.templateLink.uri, 'deploy-master.json')]",
+        "beegfsdeployUrl": "[uri(deployment().properties.templateLink.uri, 'BeeGFS/deploy-beegfs-vmss.json')]",
+        "nodesdeployUrl": "[uri(deployment().properties.templateLink.uri, 'deploy-nodes.json')]",
+        "customscriptdeployUrl": "[uri(deployment().properties.templateLink.uri, 'custom/custom-script.json')]",
+        "deploymentApiVersion": "2015-01-01"
+    },
+"resources": [
+    {
+        "name": "deploy-master",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "[variables('deploymentApiVersion')]",
+        "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+            "uri": "[variables('masterdeployUrl')]",
+            "contentVersion": "1.0.0.0"
+            },
+            "parameters": {
+                "VMsku": {
+                    "value": "[parameters('masterVMsku')]"
+                },
+                "masterImage": {
+                    "value": "[parameters('masterImage')]"
+                },
+                "sharedStorage": {
+                    "value": "[parameters('sharedStorage')]"
+                },
+                "dataDiskSize": {
+                    "value": "[parameters('dataDiskSize')]"
+                },
+                "scheduler": {
+                    "value": "[parameters('scheduler')]"
+                },
+                "vmPrefix": {
+                    "value": "[parameters('vmPrefix')]"
+                },
+                "adminUserName": {
+                    "value": "[parameters('adminUserName')]"
+                },
+                "adminPassword": {
+                    "value": "[parameters('adminPassword')]"
+                },
+                "sshKeyData": {
+                    "value": "[parameters('sshKeyData')]"
+                },
+                "numberofusers": {
+                    "value": "[parameters('numberofusers')]"
+                }
+            }
+        }
+    },
+    {
+        "name": "deploy-beegfs",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "[variables('deploymentApiVersion')]",
+        "dependsOn": [
+            "deploy-master"
+          ],
+        "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+            "uri": "[variables('beegfsdeployUrl')]",
+            "contentVersion": "1.0.0.1"
+            },
+            "parameters": {
+                "nodeType": {
+                    "value": "[parameters('nodeType')]"
+                  },
+                  "nodeCount": {
+                    "value": "[parameters('nodeCount')]"
+                  },
+                  "VMsku": {
+                    "value": "[parameters('storageVMsku')]"
+                  },
+                  "RGvnetName": {
+                    "value": "[parameters('RGvnetName')]"
+                  },
+                  "adminUsername": {
+                    "value": "[parameters('adminUserName')]"
+                  },
+                  "sshKeyData": {
+                    "value": "[parameters('sshKeyData')]"
+                  },
+                  "masterName": {
+                    "value": "[reference('deploy-master').outputs.mastername.value]"
+                  },
+                  "storageDiskSize": {
+                    "value": "[parameters('storageDiskSize')]"
+                  },
+                  "nbStorageDisks": {
+                    "value": "[parameters('nbStorageDisks')]"
+                  },
+                  "metaDiskSize": {
+                    "value": "[parameters('metaDiskSize')]"
+                  },
+                  "nbMetaDisks": {
+                    "value": "[parameters('nbMetaDisks')]"
+                  },
+                  "customDomain": {
+                    "value": "[parameters('customDomain')]"
+                  }
+                }
+            }
+        },
+        {
+            "name": "deploy-nodes",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('deploymentApiVersion')]",
+            "dependsOn": [
+                "deploy-beegfs"
+              ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                "uri": "[variables('nodesdeployUrl')]",
+                "contentVersion": "1.0.0.1"
+                },
+                "parameters": {
+                  "VMsku": {
+                    "value": "[parameters('computeVMsku')]"
+                  },
+                  "sharedStorage": {
+                    "value": "[parameters('sharedStorage')]"
+                  },
+                  "scheduler": {
+                    "value": "[parameters('scheduler')]"
+                  },
+                  "computeNodeImage": {
+                    "value":  "[parameters('computeNodeImage')]"
+                   
+                  },
+                  "vmSSPrefix": {
+                    "value":  "[parameters('vmSSPrefix')]"
+                   
+                  },
+                  "instanceCountPerVMSS": {
+                    "value":  "[parameters('instanceCountPerVMSS')]"
+                  
+                  },
+                  "numberOfVMSS": {
+                    "value":  "[parameters('numberOfVMSS')]"
+                   
+                  },
+                  "RGvnetName": {
+                    "value": "[parameters('RGvnetName')]"
+                  },
+                  "adminUsername": {
+                    "value": "[parameters('adminUserName')]"
+                  },
+                  "sshKeyData": {
+                    "value": "[parameters('sshKeyData')]"
+                  },
+                  "adminPassword": {
+                    "value": "[parameters('adminPassword')]"
+                  },
+                  "masterName": {
+                    "value": "[reference('deploy-master').outputs.mastername.value]"
+                  },
+                  "numberofusers": {
+                    "value": "[parameters('numberofusers')]"
+                  }
+                }
+            }
+        }
+    
+    ],
+    "outputs": {
+        "GangliaURI": {
+            "value": "[reference('deploy-master').outputs.masterFQDN.value]",
+            "type": "string"
+          },
+          "masterFQDN": {
+            "value": "[reference('deploy-master').outputs.masterFQDN.value]",
+            "type": "string"
+          }
+    }
+}

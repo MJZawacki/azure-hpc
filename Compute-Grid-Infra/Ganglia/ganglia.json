@@ -25,12 +25,12 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[uri(deployment().properties.templateLink.uri, 'install_ganglia.sh')]"
+            "[uri(deployment().properties.templateLink.uri, 'installganglia.sh')]"
           ],
           "timestamp": 12345
         },
         "protectedSettings": {
-          "commandToExecute": "[concat('bash install_ganglia.sh ', parameters('masterName'), ' Master 8649')]"
+          "commandToExecute": "[concat('bash installganglia.sh ', parameters('masterName'), ' Master 8649')]"
         }
       }
     }

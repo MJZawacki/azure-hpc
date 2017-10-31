@@ -52,7 +52,7 @@
   "variables": {
     "storageAccountType": "Premium_LRS",
     "location": "[resourceGroup().location]",
-    "vnetID": "[resourceId(parameters('nodeSettings').vnetRG, 'Microsoft.Network/virtualNetworks', parameters('nodeSettings').vnetName)]",
+    "vnetID": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('nodeSettings').vnetName)]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('nodeSettings').subnetName)]",
     "computeApiVersion": "2016-03-30",
     "extensionApiVersion": "2015-06-15",

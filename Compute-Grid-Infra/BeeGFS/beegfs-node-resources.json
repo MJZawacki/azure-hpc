@@ -41,7 +41,7 @@
     "vmName": "[concat(toLower(variables('vmPrefix')[parameters('nodeSettings').nodeType].prefix), parameters('vmIndex'))]",
     "dataStoreSA": "[concat(uniquestring(resourceGroup().id, variables('vmName')), variables('vmName'), 'sa')]",
     "osDiskName": "[concat(variables('vmName'), 'osdisk')]",
-    "vnetID": "[resourceId(parameters('nodeSettings').vnetRG, 'Microsoft.Network/virtualNetworks', parameters('nodeSettings').vnetName)]",
+    "vnetID": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('nodeSettings').vnetName)]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('nodeSettings').subnetName)]",
     "nicName": "[concat(variables('vmName'), 'nic')]",
     "ipConfigName": "[concat(variables('vmName'), 'ipconfig')]",

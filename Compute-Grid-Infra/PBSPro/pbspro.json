@@ -25,12 +25,12 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[uri(deployment().properties.templateLink.uri, 'install_pbspro.sh')]"
+            "[uri(deployment().properties.templateLink.uri, 'installpbspro.sh')]"
           ],
           "timestamp": 12345
         },
         "protectedSettings": {
-          "commandToExecute": "[concat('bash install_pbspro.sh ', parameters('masterName'))]"
+          "commandToExecute": "[concat('bash installpbspro.sh ', parameters('masterName'))]"
         }
       }
     }

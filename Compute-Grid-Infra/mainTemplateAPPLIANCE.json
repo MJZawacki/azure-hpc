@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "applianceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Specify the name of the appliance"
+      }
+    }
+  },
+  "variables": {
+    "managedResourceGroup": "[concat(resourceGroup().id,uniquestring(resourceGroup().id))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Solutions/applicationDefinitions",
+      "apiVersion": "2017-09-01",
+      "name": "[parameters('applianceName')]",
+      "location": "[resourceGroup().location]",
+      "kind": "marketplace",
+      "properties": {
+        "managedResourceGroupId": "[variables('managedResourceGroup')]",
+        "PublisherPackageId": "azureappliancetest.mzmanagedapptest.mzpreviewmanagedsku.1.0.0",
+        "parameters": {
+          "applianceName": {
+            "value": "[parameters('applianceName')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+
+  }
+}

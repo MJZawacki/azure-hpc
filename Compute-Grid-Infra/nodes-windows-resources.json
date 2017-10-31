@@ -60,7 +60,7 @@
     "saCount": "[add(2, div(parameters('instanceCount'), 30))]",
     "vhdContainerName": "[concat(variables('namingInfix'), 'vhd')]",
     "osDiskName": "[concat(variables('namingInfix'), 'osdisk')]",
-    "vnetID": "[resourceId(parameters('nodeSettings').vnetRG, 'Microsoft.Network/virtualNetworks', parameters('nodeSettings').vnetName)]",
+    "vnetID": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('nodeSettings').vnetName)]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('nodeSettings').subnetName)]",
     "nicName": "[concat(variables('namingInfix'), 'nic')]",
     "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
