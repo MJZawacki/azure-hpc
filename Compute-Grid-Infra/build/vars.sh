@@ -5,10 +5,10 @@ storageAccountName=''
 storageKey=''
 
 #App Definition Vars
-basename='HPCApp'                       #Base name for app instances
+basename='mzHPC'                        #Base name for app instances
 vmprefix='hpc'                          #VM prefix copied to params file
 appdisplayname='HPC App'                #Managed App Display Name
-apprg='myManagedApps'                   #Managed App Definition Resouce Group 
+apprg='mzManagedApps'                   #Managed App Definition Resouce Group 
 apploc='westcentralus'                  #Managed App Definition Location (different from instance location)
 appdescription='HPC cluster'            #Managed App Description
 managedappcontainer='managedapps'
@@ -18,5 +18,5 @@ location='westus2'                      #App Instance Location
 
 appname=$basename'App'                  #Managed App Name
 appinstancename=$appname                #App Instance Name
-managedrg=$appname$counter              #App Instance Resource Group (visible to end customer)
+managedrg=$appname                      #App Instance Resource Group (visible to end customer)
 managedrgcontainer=$managedrg'internal' #App Instance Internal RG    (visible to administrator)

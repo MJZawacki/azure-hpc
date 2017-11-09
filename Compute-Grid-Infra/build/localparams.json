@@ -1,26 +1,28 @@
 {
-    "masterVMsku": { "value": "Standard_DS3_v2"},
+    "masterVMsku": {
+        "value": "Standard_DS3_v2"},
     "masterImage":{ "value": "CentOS_7.2"},
     "sharedStorage": {"value": "beegfs"},
     "dataDiskSize": {"value": "P10"},
     "scheduler": {"value": "pbspro"},
     "vmPrefix": {"value": "hpc"},
-    "adminUserName": {"value": ""},
-    "adminPassword": {"value": ""},
-    "sshKeyData": {"value": ""},
+    "adminUserName": {"value": "localadmin"},
+    "adminPassword": {"value": "Mountrainier314"},
+    "sshKeyData": {"value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCv8e3kma7EyYt8NpPZ6RhTq3MXSDH1AlClCytL+q6uwYPyIlLIH1EwnvcP00XmNj0o2K2wQLMo8idw8ifnC9ex6Cks9Ss+ZGrsNl1HieiiXqolrd/L7qA6LOpCEb/Y/uQz/ON2bykOxiQzINPPWLjmfyA1le9KgD8xPSoaiYGT2gtqETdGyW4hHzD1YYlqvBQC97500D1hWtsVeIktXpi9/498aZptRxi9mss2TrlVHW5YVz9K45VvfOJJl2tQWa66Iz2WwsSuxBOqKeQe2Lyw6frgfMZH9BOUyO9tVvnvSzuQlar4wqMKo2nk1/Uakw3FKuOMCfkSfpJkbzrLu50b mjz115@ALTA"},
     "numberofusers":{ "value": "3"},
 
 
-    "storageVMsku": { "value": "Standard_DS3_v2"},
+    "storageVMsku": {
+        "value": "Standard_DS3_v2"},
     "nodeCount": { "value": 3 },
     "storageDiskSize": { "value": "P10" },
     "nbStorageDisks": { "value": 2 },
     "nbMetaDisks": { "value": 2 },
-    "RGvnetName": { "value": "hpc" },
+    "RGvnetName": { "value": "spix" },
 
     "computeVMsku": {"value": "Standard_DS3_v2"},
     "computeNodeImage": {"value": "CentOS_7.2"},
-    "vmSSPrefix": {"value": "comp"},
+    "vmSSPrefix": {"value": "hpc"},
     "instanceCountPerVMSS": {"value": 2},
     "numberOfVMSS": {"value": 1}
 }

@@ -15,12 +15,14 @@ groupid=$(az ad group show --group $adgroup --query objectId --output tsv)
 
 echo 'Creating zip file'
 zipfile='AzureHPC.zip'
-packageFile='../../'$zipfile
-rm -rf $packageFile
+rm -rf ../../$zipfile
 #Need windows compatible zip file - using 7zip - unix zip may not work
-7z a -r $packageFile ../*
+#7z a -r $packageFile ../*
+cd .. 
+zip -r ../$zipfile *
+cd -
 echo 'Uploading to Azure'
-az storage blob upload -n AzureHPC.zip -c $managedappcontainer --account-name $storageAccountName --account-key $storageKey -f $packageFile
+az storage blob upload -n AzureHPC.zip -c $managedappcontainer --account-name $storageAccountName --account-key $storageKey -f ../../$zipfile
 
 #Generate SAS key for managed app definition to securely access zip file for one day
 expirydate=`date -u --date '1 day' +'%Y-%m-%dT%H:%M:%SZ'`

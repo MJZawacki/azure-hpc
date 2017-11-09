@@ -394,7 +394,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('deploymentApiVersion')]",
             "dependsOn": [
-                "deploy-beegfs"
+                "deploy-master"
               ],
             "properties": {
                 "mode": "Incremental",
