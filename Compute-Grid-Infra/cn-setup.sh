@@ -87,7 +87,7 @@ install_lsf()
 install_applications()
 {
 	log "install applications"		
-	bash spi_p3_cn.sh ${numusers} 
+	bash spip3cn.sh ${numusers} 
 }
 
 mount_nfs()
@@ -131,7 +131,7 @@ install_ganglia()
 
 install_pbspro()
 {
-	bash install_pbspro.sh ${MASTER_NAME}
+	bash installpbspro.sh ${MASTER_NAME}
 }
 
 #install the Linux Integration Services v4.1.3-2
